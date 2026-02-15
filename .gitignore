@@ -1,0 +1,50 @@
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build/package artifacts
+build/
+dist/
+*.egg-info/
+
+# Project-generated outputs
+artifacts/
+models/
+
+# Local large snapshots
+sikayetler.jsonl
+kb.jsonl
+solution_steps.jsonl
+step_kb_links.jsonl
+taxonomy.yaml
+
+# Logs and temp
+*.log
+tmp/
+temp/
+
+# OS/IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.ipynb_checkpoints/
+
+# Local bookkeeping
+patches/
+
+# Local database leftovers
+*.sqlite
+*.sqlite-journal

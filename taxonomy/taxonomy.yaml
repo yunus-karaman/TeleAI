@@ -1,0 +1,296 @@
+taxonomy_name: telecom_solution_dataset_v1
+taxonomy_version: 1.0.0
+language: tr
+categories:
+- category_id: BILLING_PAYMENTS
+  title_tr: Billing Payments
+  description_tr: Fatura, ücretlendirme, ödeme, iade ve itiraz konuları
+  keywords_tr:
+  - billing
+  - payments
+  - fatura
+  - ücretlendirme
+  - ödeme
+  - iade
+  - itiraz
+  - konuları
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Billing Payments ile ilgili sorun yasiyorum.
+  escalation_default_unit: BILLING_SUPPORT
+  risk_level_default: low
+  version: 1.0.0
+- category_id: CONTRACT_CANCELLATION
+  title_tr: Contract Cancellation
+  description_tr: Taahhüt, cayma bedeli, abonelik iptali/fesih süreçleri
+  keywords_tr:
+  - contract
+  - cancellation
+  - taahhüt
+  - cayma
+  - bedeli
+  - abonelik
+  - iptali
+  - fesih
+  - süreçleri
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Contract Cancellation ile ilgili sorun yasiyorum.
+  escalation_default_unit: BILLING_SUPPORT
+  risk_level_default: low
+  version: 1.0.0
+- category_id: COVERAGE_SIGNAL
+  title_tr: Coverage Signal
+  description_tr: Çekim/kapsama, sinyal zayıf, iç mekân sorunları
+  keywords_tr:
+  - coverage
+  - signal
+  - çekim
+  - kapsama
+  - sinyal
+  - zayıf
+  - mek
+  - sorunları
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Coverage Signal ile ilgili sorun yasiyorum.
+  escalation_default_unit: NETWORK_NOC
+  risk_level_default: low
+  version: 1.0.0
+- category_id: CUSTOMER_SUPPORT_PROCESS
+  title_tr: Customer Support Process
+  description_tr: Müşteri hizmetleri süreçleri, kayıt, geri dönüş, şikayet takibi
+  keywords_tr:
+  - customer
+  - support
+  - process
+  - müşteri
+  - hizmetleri
+  - süreçleri
+  - kayıt
+  - geri
+  - dönüş
+  - şikayet
+  - takibi
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Customer Support Process ile ilgili sorun yasiyorum.
+  escalation_default_unit: GENERAL_SUPPORT
+  risk_level_default: low
+  version: 1.0.0
+- category_id: DIGITAL_APP_AUTH
+  title_tr: Digital App Auth
+  description_tr: Operatör uygulaması, giriş/OTP, hata kodları
+  keywords_tr:
+  - digital
+  - app
+  - auth
+  - operatör
+  - uygulaması
+  - giriş
+  - otp
+  - hata
+  - kodları
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Digital App Auth ile ilgili sorun yasiyorum.
+  escalation_default_unit: DIGITAL_SUPPORT
+  risk_level_default: low
+  version: 1.0.0
+- category_id: HOME_INTERNET_FIBER_DSL
+  title_tr: Home Internet Fiber Dsl
+  description_tr: Ev interneti (fiber/DSL) hız/kararlılık/bağlantı
+  keywords_tr:
+  - home
+  - internet
+  - fiber
+  - dsl
+  - interneti
+  - hız
+  - kararlılık
+  - bağlantı
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Home Internet Fiber Dsl ile ilgili sorun yasiyorum.
+  escalation_default_unit: TECH_SUPPORT_HOME
+  risk_level_default: low
+  version: 1.0.0
+- category_id: INSTALLATION_INFRASTRUCTURE
+  title_tr: Installation Infrastructure
+  description_tr: Kurulum, nakil, altyapı/port, randevu süreçleri
+  keywords_tr:
+  - installation
+  - infrastructure
+  - kurulum
+  - nakil
+  - altyapı
+  - port
+  - randevu
+  - süreçleri
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Installation Infrastructure ile ilgili sorun yasiyorum.
+  escalation_default_unit: TECH_SUPPORT_HOME
+  risk_level_default: low
+  version: 1.0.0
+- category_id: MOBILE_DATA_SPEED
+  title_tr: Mobile Data Speed
+  description_tr: Mobil veri yavaşlığı, hız, kota/GB, bağlantı kalitesi
+  keywords_tr:
+  - mobile
+  - data
+  - speed
+  - mobil
+  - veri
+  - yavaşlığı
+  - hız
+  - kota
+  - bağlantı
+  - kalitesi
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Mobile Data Speed ile ilgili sorun yasiyorum.
+  escalation_default_unit: TECH_SUPPORT_MOBILE
+  risk_level_default: low
+  version: 1.0.0
+- category_id: MOBILE_VOICE_SMS
+  title_tr: Mobile Voice Sms
+  description_tr: Arama/konuşma, SMS, VoLTE/VoWiFi, arama kalitesi
+  keywords_tr:
+  - mobile
+  - voice
+  - sms
+  - arama
+  - konuşma
+  - volte
+  - vowifi
+  - kalitesi
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Mobile Voice Sms ile ilgili sorun yasiyorum.
+  escalation_default_unit: TECH_SUPPORT_MOBILE
+  risk_level_default: low
+  version: 1.0.0
+- category_id: MODEM_DEVICE
+  title_tr: Modem Device
+  description_tr: Modem/router/cihaz kaynaklı bağlantı sorunları
+  keywords_tr:
+  - modem
+  - device
+  - router
+  - cihaz
+  - kaynaklı
+  - bağlantı
+  - sorunları
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Modem Device ile ilgili sorun yasiyorum.
+  escalation_default_unit: TECH_SUPPORT_HOME
+  risk_level_default: low
+  version: 1.0.0
+- category_id: NUMBER_PORTING_MNP
+  title_tr: Number Porting Mnp
+  description_tr: Numara taşıma, hat geçişi, aktivasyon süreleri
+  keywords_tr:
+  - number
+  - porting
+  - mnp
+  - numara
+  - taşıma
+  - hat
+  - geçişi
+  - aktivasyon
+  - süreleri
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Number Porting Mnp ile ilgili sorun yasiyorum.
+  escalation_default_unit: PORTING_TEAM
+  risk_level_default: low
+  version: 1.0.0
+- category_id: OTHER
+  title_tr: Genel Diger
+  description_tr: Diger telekom sikayetleri icin genel sinif.
+  keywords_tr:
+  - diger
+  - genel
+  - telekom
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Sorunun kategorisini netlestiremedim.
+  escalation_default_unit: GENERAL_SUPPORT
+  risk_level_default: low
+  version: 1.0.0
+- category_id: OUTAGE_SERVICE_DOWN
+  title_tr: Outage Service Down
+  description_tr: Kesinti, hizmet yok, bölgesel arıza, planlı çalışma
+  keywords_tr:
+  - outage
+  - service
+  - down
+  - kesinti
+  - hizmet
+  - yok
+  - bölgesel
+  - arıza
+  - planlı
+  - çalışma
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Outage Service Down ile ilgili sorun yasiyorum.
+  escalation_default_unit: NETWORK_NOC
+  risk_level_default: low
+  version: 1.0.0
+- category_id: PLANS_PACKAGES
+  title_tr: Plans Packages
+  description_tr: Tarife/paket, kampanya, ek paket, yenileme ve kullanım hakları
+  keywords_tr:
+  - plans
+  - packages
+  - tarife
+  - paket
+  - kampanya
+  - yenileme
+  - kullanım
+  - hakları
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Plans Packages ile ilgili sorun yasiyorum.
+  escalation_default_unit: BILLING_SUPPORT
+  risk_level_default: low
+  version: 1.0.0
+- category_id: ROAMING_INTERNATIONAL
+  title_tr: Roaming International
+  description_tr: Yurt dışı roaming/dolaşım, yurt dışı paketleri
+  keywords_tr:
+  - roaming
+  - international
+  - yurt
+  - dışı
+  - dolaşım
+  - paketleri
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Roaming International ile ilgili sorun yasiyorum.
+  escalation_default_unit: TECH_SUPPORT_MOBILE
+  risk_level_default: low
+  version: 1.0.0
+- category_id: SIM_LINE_ACCOUNT
+  title_tr: Sim Line Account
+  description_tr: SIM/hat, kimlik doğrulama süreçleri (PII istemeden), hat kısıtları
+  keywords_tr:
+  - sim
+  - line
+  - account
+  - hat
+  - kimlik
+  - doğrulama
+  - süreçleri
+  - pii
+  - istemeden
+  - kısıtları
+  negative_keywords_tr: []
+  example_phrases_tr:
+  - Sim Line Account ile ilgili sorun yasiyorum.
+  escalation_default_unit: STORE
+  risk_level_default: low
+  version: 1.0.0

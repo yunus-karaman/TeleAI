@@ -1,0 +1,463 @@
+project:
+  name: turkish-telecom-complaint-assistant
+  version: 0.1.0
+
+paths:
+  dataset: sikayetler.jsonl
+  artifacts_dir: artifacts
+  integrity_dir: artifacts/integrity
+  debug_dir: artifacts/debug
+  aborted_reason: artifacts/aborted_reason.json
+  smoke_notice: artifacts/smoke_notice.json
+  schema_report: artifacts/schema_report.json
+  clean_complaints: artifacts/complaints_clean.jsonl
+  labeled_complaints: artifacts/complaints_labeled.jsonl
+  preprocess_report: artifacts/preprocess_report.json
+  duplicates_report: artifacts/duplicates_report.json
+  train_split: artifacts/splits/train.jsonl
+  val_split: artifacts/splits/val.jsonl
+  test_split: artifacts/splits/test.jsonl
+  hard_test_split: artifacts/splits/hard_test.jsonl
+  taxonomy_report_json: artifacts/taxonomy_report.json
+  taxonomy_report_md: artifacts/taxonomy_report.md
+  taxonomy_error_analysis_dir: artifacts/error_analysis
+  category_patterns: artifacts/category_patterns.json
+  solution_steps_jsonl: artifacts/solution_steps.jsonl
+  kb_jsonl: artifacts/kb.jsonl
+  step_kb_links_jsonl: artifacts/step_kb_links.jsonl
+  solution_steps_summary: artifacts/solution_steps_summary.json
+  solution_step_lint_report: artifacts/solution_step_lint_report.json
+  kb_lint_report: artifacts/kb_lint_report.json
+  graph_nodes: artifacts/graph/nodes.jsonl
+  graph_edges: artifacts/graph/edges.jsonl
+  graph_stats: artifacts/graph/graph_stats.json
+  gnn_embeddings: artifacts/graph/gnn_embeddings.npz
+  embeddings_dir: artifacts/embeddings
+  retrieval_eval_json: artifacts/retrieval_eval.json
+  retrieval_eval_md: artifacts/retrieval_eval.md
+  review_pack_for_humans: artifacts/review_pack_for_humans.jsonl
+  task2_sft_train: artifacts/training/task2_sft_train.jsonl
+  task2_sft_val: artifacts/training/task2_sft_val.jsonl
+  task1_intent_train: artifacts/training/task1_intent_train.jsonl
+  task1_intent_val: artifacts/training/task1_intent_val.jsonl
+  models_dir: artifacts/models
+  training_eval_quick_json: artifacts/training_eval_quick.json
+  training_eval_quick_md: artifacts/training_eval_quick.md
+  training_run_summary: artifacts/training_run_summary.json
+  eval_dir: artifacts/eval
+  hallucination_report_json: artifacts/eval/hallucination_report.json
+  hallucination_report_md: artifacts/eval/hallucination_report.md
+  security_adversarial_report_json: artifacts/eval/security_adversarial_report.json
+  security_adversarial_report_md: artifacts/eval/security_adversarial_report.md
+  pii_leak_report_json: artifacts/eval/pii_leak_report.json
+  pii_leak_report_md: artifacts/eval/pii_leak_report.md
+  task_metrics_report_json: artifacts/eval/task_metrics_report.json
+  task_metrics_report_md: artifacts/eval/task_metrics_report.md
+  combined_dashboard_json: artifacts/eval/combined_dashboard.json
+  quarantine: artifacts/quarantine.jsonl
+  logs_dir: artifacts/logs
+
+reproducibility:
+  seed: 42
+  deterministic: true
+
+fail_fast:
+  schema_violation: true
+  pii_leak: true
+  hallucination_violation: true
+  missing_evidence: true
+  graph_inconsistency: true
+  model_backend_failure: true
+
+logging:
+  level: INFO
+  json: true
+  file: artifacts/logs/pipeline.jsonl
+
+pipeline:
+  fail_fast_stage: true
+  continue_on_record_error: true
+  max_retry_count: 2
+
+preprocess:
+  version: preprocess-v1
+  output_timestamp_iso: "2026-01-01T00:00:00+00:00"
+  min_chars: 80
+  max_chars: 6000
+  script_noise:
+    indicators:
+      - "<script"
+      - "googletag"
+      - "defineSlot"
+      - "adsData"
+      - "prebid"
+      - "pubads"
+      - "gpt_unit_"
+      - "window.addEventListener"
+    min_indicator_hits: 2
+    min_js_line_ratio: 0.35
+    min_alpha_ratio: 0.25
+    min_cleaned_ratio: 0.2
+  multi_complaint:
+    strategy: auto
+    split_min_chars: 80
+  duplicates:
+    enabled: true
+    shingle_size: 3
+    num_perm: 32
+    bands: 8
+    similarity_threshold: 0.9
+    full_mode_drop_duplicates: true
+    smoke_mode_keep_duplicates: true
+    smoke_drop_extreme_clusters: false
+    smoke_extreme_cluster_size: 20
+
+taxonomy:
+  taxonomy_file: taxonomy/taxonomy.yaml
+  assignment:
+    min_confidence: 0.55
+    low_confidence_policy: other
+    review_margin_threshold: 0.08
+    rule_weight: 0.55
+    embedding_weight: 0.45
+    keyword_weight: 1.0
+    negative_weight: 0.8
+    example_weight: 1.2
+    embedding:
+      max_features: 50000
+      ngram_min: 1
+      ngram_max: 2
+      min_df: 2
+  splits:
+    train_ratio: 0.75
+    val_ratio: 0.10
+    test_ratio: 0.15
+    hard_test_ratio: 0.10
+    hard_test_max_size: 1000
+    hard_short_max_chars: 180
+    hard_confidence_threshold: 0.65
+  baselines:
+    run_baseline2_smoke: false
+    run_baseline2_full: true
+    baseline1:
+      min_df: 2
+      max_features: 70000
+      max_iter: 400
+    baseline2:
+      min_df: 2
+      max_features: 70000
+      svd_components: 256
+      max_iter: 500
+  error_analysis:
+    top_n_per_class: 20
+  report:
+    needs_review_sample_size: 25
+
+solution_steps:
+  version: solution-steps-v1
+  taxonomy_file: taxonomy/taxonomy.yaml
+  pattern_top_k: 8
+  smoke_category_limit: 6
+  quality:
+    min_steps_per_category: 6
+    max_steps_per_category: 12
+    min_level_counts:
+      L1: 3
+      L2: 2
+      L3: 1
+
+hallucination_control:
+  require_evidence: true
+  max_unsupported_claims: 0
+  answer_abstain_threshold: 0.35
+  contradiction_block_threshold: 0.2
+  citation_coverage_min: 0.95
+
+escalation:
+  enabled: true
+  confidence_threshold: 0.55
+  critical_sentiment_threshold: 0.8
+  unresolved_turn_limit: 2
+  fallback_queue: live_agent_turkey
+
+retrieval:
+  strategy: hybrid
+  bm25_weight: 0.5
+  dense_weight: 0.5
+  top_k: 6
+  rerank_top_k: 20
+  min_score: 0.4
+  evidence_min_items: 2
+
+graph:
+  enabled: true
+  graph_rag: true
+  use_gnn: false
+  node_limit_per_complaint: 128
+  edge_weight_threshold: 0.25
+  hop_limit: 2
+
+graph_pipeline:
+  include_brand_nodes: true
+  include_time_bucket_nodes: true
+  embeddings:
+    dimension: 768
+    ngram_min: 1
+    ngram_max: 2
+    force_recompute: false
+  retrieval:
+    alpha: 0.45
+    beta: 0.15
+    gamma: 0.25
+    delta: 0.10
+    lambda_gnn: 0.05
+    min_steps: 3
+    top_steps: 5
+    max_evidence: 10
+    escalation_threshold: 0.58
+  gnn:
+    epochs: 8
+    self_weight: 0.65
+    neighbor_weight: 0.35
+    convergence_tol: 0.0005
+  evaluation:
+    review_pack_size: 300
+  mode:
+    SMOKE:
+      complaint_limit: 3500
+      eval_limit: 600
+      include_retrieval_debug: false
+    FULL:
+      complaint_limit: null
+      eval_limit: null
+      include_retrieval_debug: true
+
+model:
+  base_model_name: Qwen/Qwen2.5-7B-Instruct
+  fallback_model_name: mistralai/Mistral-7B-Instruct-v0.3
+  cache_dir: artifacts/hf_cache
+  local_files_only: false
+  allow_remote_download: true
+
+models:
+  base_llm: Qwen2.5-7B-Instruct
+  language: tr
+  max_context_tokens: 4096
+  decoding:
+    temperature: 0.0
+    top_p: 0.9
+    max_new_tokens: 512
+    repetition_penalty: 1.1
+
+training:
+  trainer: sft
+  use_llm_for_intent: false
+  device: h100
+  precision: bf16
+  max_seq_length: 2048
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  warmup_ratio: 0.03
+  gradient_accumulation_steps: 8
+  save_steps: 100
+  eval_steps: 100
+  logging_steps: 10
+  checkpoint_dir: artifacts/checkpoints
+  resume_from_checkpoint: auto
+
+training_llm:
+  dataset:
+    version: task2-sft-v1
+    task2_top_steps: 5
+    task2_min_steps: 3
+    task2_max_evidence: 10
+    force_recompute_retrieval_embeddings: false
+  smoke:
+    retrieval_fit_limit: 6000
+    task2_train_limit: 2500
+    task2_val_limit: 350
+  lora:
+    r: 64
+    alpha: 16
+    dropout: 0.05
+    target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
+    use_qlora_4bit: true
+  trainer:
+    force_mock_training: false
+    fallback_to_mock_on_failure: false
+    SMOKE:
+      learning_rate: 2.0e-4
+      weight_decay: 0.01
+      warmup_ratio: 0.03
+      gradient_accumulation_steps: 4
+      max_seq_len: 1536
+      num_epochs: 1
+      batch_size: 2
+      eval_steps: 50
+      save_steps: 50
+      logging_steps: 10
+      max_oom_retries: 3
+      auto_batch_reduce_on_oom: true
+      early_stopping_patience: 2
+    FULL:
+      learning_rate: 1.5e-4
+      weight_decay: 0.01
+      warmup_ratio: 0.03
+      gradient_accumulation_steps: 8
+      max_seq_len: 2048
+      num_epochs: 3
+      batch_size: 4
+      eval_steps: 200
+      save_steps: 200
+      logging_steps: 20
+      max_oom_retries: 4
+      auto_batch_reduce_on_oom: true
+      early_stopping_patience: 3
+  inference:
+    default_run_id: null
+    force_renderer_only: false
+    allow_renderer_fallback_in_smoke: true
+    max_new_tokens: 420
+    repetition_penalty: 1.1
+    regen_once_on_invalid: true
+  quick_eval:
+    SMOKE:
+      test_limit: 120
+      hard_test_limit: 120
+    FULL:
+      test_limit: null
+      hard_test_limit: null
+
+evaluation:
+  mode:
+    SMOKE:
+      test_limit: 500
+      hard_test_limit: 500
+      adversarial_prompt_count: 50
+    FULL:
+      test_limit: null
+      hard_test_limit: null
+      adversarial_prompt_count: 220
+  chat:
+    max_attempts: 2
+  safety_gates:
+    hallucination_rate_actionable_max: 0.05
+    evidence_mismatch_rate_max: 1.0
+    step_hallucination_rate_max: 0.0
+    citation_hallucination_rate_max: 0.0
+    pii_leakage_rate_max: 0.0
+    unsafe_compliance_rate_max: 0.01
+
+lora:
+  method: qlora
+  r: 64
+  alpha: 16
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  quantization:
+    load_in_4bit: true
+    bnb_4bit_quant_type: nf4
+    bnb_4bit_use_double_quant: true
+    bnb_4bit_compute_dtype: bfloat16
+
+mode_profiles:
+  SMOKE:
+    mode_runtime:
+      sample_size: 1200
+      max_runtime_minutes: 60
+    preprocess:
+      multi_complaint:
+        strategy: truncate_primary
+      duplicates:
+        smoke_mode_keep_duplicates: true
+    taxonomy:
+      baselines:
+        run_baseline2_smoke: false
+      report:
+        needs_review_sample_size: 10
+    solution_steps:
+      smoke_category_limit: 6
+    graph_pipeline:
+      mode:
+        SMOKE:
+          complaint_limit: 3500
+          eval_limit: 600
+          include_retrieval_debug: false
+    training:
+      epochs: 1
+      max_steps: 200
+      per_device_train_batch_size: 4
+      per_device_eval_batch_size: 4
+    training_llm:
+      smoke:
+        retrieval_fit_limit: 6000
+        task2_train_limit: 2500
+        task2_val_limit: 350
+      trainer:
+        SMOKE:
+          num_epochs: 1
+          batch_size: 2
+      quick_eval:
+        SMOKE:
+          test_limit: 120
+          hard_test_limit: 120
+    evaluation:
+      mode:
+        SMOKE:
+          test_limit: 500
+          hard_test_limit: 500
+          adversarial_prompt_count: 50
+  FULL:
+    mode_runtime:
+      sample_size: null
+      max_runtime_minutes: null
+    preprocess:
+      multi_complaint:
+        strategy: split
+      duplicates:
+        full_mode_drop_duplicates: true
+    taxonomy:
+      baselines:
+        run_baseline2_full: true
+    solution_steps:
+      smoke_category_limit: 16
+    graph_pipeline:
+      mode:
+        FULL:
+          complaint_limit: null
+          eval_limit: null
+          include_retrieval_debug: true
+    training:
+      epochs: 3
+      max_steps: null
+      per_device_train_batch_size: 16
+      per_device_eval_batch_size: 16
+    training_llm:
+      trainer:
+        FULL:
+          num_epochs: 3
+          batch_size: 4
+      quick_eval:
+        FULL:
+          test_limit: null
+          hard_test_limit: null
+    evaluation:
+      mode:
+        FULL:
+          test_limit: null
+          hard_test_limit: null
+          adversarial_prompt_count: 220
