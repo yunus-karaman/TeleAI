@@ -1,4 +1,4 @@
-# Türk Telekom Şikayet Asistanı
+#  Telekom Şikayet Asistanı
 
 Bu proje, telekom şikayetlerini güvenli ve denetlenebilir bir boru hattı ile işlemek için tasarlanmıştır.
 
